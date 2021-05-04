@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "surf-report.name" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ include "surf-report.name" . }}
+    chart: {{ include "surf-report.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: {{ include "surf-report.name" . }}
+      release: {{ .Release.Name }}
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: {{ include "surf-report.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+      - image: {{ .Values.container.image }}
+        imagePullPolicy: Always
+        name: {{ include "surf-report.name" . }}
+        ports:
+        - containerPort: {{ .Values.service.port }}
+        env:
+        - name: "ASPNETCORE_URLS"
+          value: "http://+:80"
+        - name: SPOT_ID
+          value: "526"
+        - name: API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: surf-report
+              key: API_TOKEN
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 80
+          successThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 80
+          initialDelaySeconds: 0
+          periodSeconds: 10
+          timeoutSeconds: 1
+          failureThreshold: 3

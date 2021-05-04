@@ -1,0 +1,13 @@
+nameOverride: ""
+fullOverride: ""
+replicaCount: 2
+namespace: surf-report
+
+container:
+  imagePullSecrets: docker-registry
+  image: bradmccoydev/surf-report:latest
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080

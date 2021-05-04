@@ -1,0 +1,23 @@
+{{/* vim: set filetype=helm: */}}
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/scrape: "true"
+  name: {{ include "surf-report.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ include "surf-report.name" . }}
+    chart: {{ include "surf-report.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      protocol: TCP
+      name: http
+      targetPort: {{ .Values.service.port }}
+  selector:
+    app: {{ include "surf-report.name" . }}
+    release: {{ .Release.Name }}
