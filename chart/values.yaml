@@ -1,11 +1,11 @@
 nameOverride: ""
 fullOverride: ""
 replicaCount: 2
-namespace: surf-report
+namespace: reactor-lab
 
 container:
   imagePullSecrets: docker-registry
-  image: bradmccoydev/surf-report:latest
+  image: bradmccoydev/reactor-lab:latest
 
 service:
   type: ClusterIP

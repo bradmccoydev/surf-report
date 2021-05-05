@@ -1,5 +1,5 @@
 apiVersion: v2
 appVersion: "202105"
-description: surf-report
-name: surf-report
+description: reactor-lab
+name: reactor-lab
 version: "202105"

@@ -1,30 +1,30 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "surf-report.name" . }}
+  name: {{ include "reactor-lab.name" . }}
   namespace: {{ .Values.namespace }}
   labels:
-    app: {{ include "surf-report.name" . }}
-    chart: {{ include "surf-report.chart" . }}
+    app: {{ include "reactor-lab.name" . }}
+    chart: {{ include "reactor-lab.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: {{ include "surf-report.name" . }}
+      app: {{ include "reactor-lab.name" . }}
       release: {{ .Release.Name }}
   strategy: {}
   template:
     metadata:
       labels:
-        app: {{ include "surf-report.name" . }}
+        app: {{ include "reactor-lab.name" . }}
         release: {{ .Release.Name }}
     spec:
       containers:
       - image: {{ .Values.container.image }}
         imagePullPolicy: Always
-        name: {{ include "surf-report.name" . }}
+        name: {{ include "reactor-lab.name" . }}
         ports:
         - containerPort: {{ .Values.service.port }}
         env:
@@ -35,7 +35,7 @@ spec:
         - name: API_TOKEN
           valueFrom:
             secretKeyRef:
-              name: surf-report
+              name: surf-api-token
               key: API_TOKEN
         readinessProbe:
           httpGet:

@@ -4,11 +4,11 @@ kind: Service
 metadata:
   annotations:
     prometheus.io/scrape: "true"
-  name: {{ include "surf-report.fullname" . }}
+  name: {{ include "reactor-lab.fullname" . }}
   namespace: {{ .Values.namespace }}
   labels:
-    app: {{ include "surf-report.name" . }}
-    chart: {{ include "surf-report.chart" . }}
+    app: {{ include "reactor-lab.name" . }}
+    chart: {{ include "reactor-lab.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
@@ -19,5 +19,5 @@ spec:
       name: http
       targetPort: {{ .Values.service.port }}
   selector:
-    app: {{ include "surf-report.name" . }}
+    app: {{ include "reactor-lab.name" . }}
     release: {{ .Release.Name }}
