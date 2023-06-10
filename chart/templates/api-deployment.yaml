@@ -9,7 +9,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: {{ include "reactor-lab.name" . }}
