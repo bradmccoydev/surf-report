@@ -1,13 +1,6 @@
 nameOverride: ""
 fullOverride: ""
-replicaCount: 2
-namespace: reactor-lab
 
-container:
-  imagePullSecrets: docker-registry
-  image: bradmccoydev/reactor-lab:latest
-
-service:
-  type: ClusterIP
-  port: 80
-  targetPort: 8080
+image:
+  repository: ghcr.io/bradmccoydev/surf-report
+  tag: latest

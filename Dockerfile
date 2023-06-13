@@ -1,22 +1,28 @@
-#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+FROM golang:1.20.4-alpine3.16 AS builder
 
-FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
-WORKDIR /app
-EXPOSE 80
-EXPOSE 443
+ENV CGO_ENABLED=0
+ARG REVISION
+WORKDIR /workspace
 
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
-WORKDIR /src
-COPY ["SurfReport.csproj", "."]
-RUN dotnet restore "./SurfReport.csproj"
-COPY . .
-WORKDIR "/src/."
-RUN dotnet build "SurfReport.csproj" -c Release -o /app/build
+COPY go.mod go.sum ./
+RUN go mod download
 
-FROM build AS publish
-RUN dotnet publish "SurfReport.csproj" -c Release -o /app/publish
+COPY ./ ./
 
-FROM base AS final
-WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "SurfReport.dll"]
+RUN go build -o /workspace/surf-report -ldflags "-X github.com/bradmccoydev/surf-report/pkg/version.REVISION=${REVISION}" ./ 
+
+FROM gcr.io/distroless/static AS production
+
+LABEL org.opencontainers.image.source="https://github.com/bradmccoydev/surf-report" \
+    org.opencontainers.image.url="https://avatars.githubusercontent.com/u/25817813?v=4" \
+    org.opencontainers.image.title="Surf Report" \
+    org.opencontainers.image.vendor='bradmccoydev' \
+    org.opencontainers.image.licenses='Apache-2.0' \
+    org.opencontainers.image.description='Surf Report'
+
+WORKDIR /
+COPY --from=builder /workspace/surf-report .
+
+USER 65532:65532
+
+ENTRYPOINT ["/surf-report"]

@@ -3,12 +3,13 @@ package prometheus
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/push"
 )
 
-func pushGaugeMetric(pushGatewayURL string, metricName string, metricValue float64) {
+func PushGaugeMetric(pushGatewayURL string, metricName string, metricValue float64) {
 	// Create a new Gauge metric for swell direction
 	gauge := prometheus.NewGauge(prometheus.GaugeOpts{
 		Name: metricName,
@@ -34,4 +35,11 @@ func pushGaugeMetric(pushGatewayURL string, metricName string, metricValue float
 	}
 
 	fmt.Println("Metrics pushed successfully")
+}
+
+func absDuration(d time.Duration) time.Duration {
+	if d < 0 {
+		return -d
+	}
+	return d
 }
